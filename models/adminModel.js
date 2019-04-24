@@ -1,6 +1,6 @@
 let mongoose = require('mongoose')
 
-var employeeSchema = mongoose.Schema({
+var adminSchema = mongoose.Schema({
     name : {
         type : String,
         required : true
@@ -13,16 +13,9 @@ var employeeSchema = mongoose.Schema({
         unique: true,
         required : true
     },
-    address : {
-        type : String
-    },
-    position : {
+    password: {
         type : String,
-        required : true
-    },
-    salary : {
-        type : Number,
         required : true
     }
 })
-module.exports = mongoose.model('employee', employeeSchema)
+module.exports = mongoose.model('admin', adminSchema)

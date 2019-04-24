@@ -1,5 +1,5 @@
 require('dotenv').config();
-let employeeModel = require('../models/employeeModel');
+let adminModel = require('../models/adminModel');
 
 let validator = require('validator');
 
@@ -7,7 +7,6 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
 exports.register = function(req,res){
-    console.log('Register called');
     data = Object.assign(req.body) || {};
     
     if(data.email && !validator.isEmail(data.email)){
@@ -19,11 +18,11 @@ exports.register = function(req,res){
     var hashedPassword = bcrypt.hashSync(data.password , 8);
     data.password = hashedPassword;
 
-    employeeModel.create(data)
-        .then( employee =>{
+    adminModel.create(data)
+        .then( admin =>{
             res.json({
                 msg:"New data has been registered",
-                data:employee
+                data:admin
             })
         })
         .catch(err => {
@@ -36,32 +35,31 @@ exports.register = function(req,res){
 
 // Handle register user actions
 exports.login = function (req, res) {
-    console.log('Login called');
     const data = Object.assign(req.body) || {};
 
     // save the user and check for errors
-    employeeModel.findOne({ email: data.email })
-		.then(employee => {
-            if(!employee){
+    adminModel.findOne({ email: data.email })
+		.then(admin => {
+            if(!admin){
                 return res.status(404).json({
                     message: "Email or Password is not valid"
                 });
             }
 
-            var IsValidPassword = bcrypt.compareSync(data.password, employee.password);
+            var IsValidPassword = bcrypt.compareSync(data.password, admin.password);
             if (!IsValidPassword) {
                 return res.status(401).json({
                     message: 'Email or Password is not valid'
                 });
             }
             // create a token
-            var token = jwt.sign({ id: employee._id, email: employee.email }, process.env.JWT_SECRET, {
+            var token = jwt.sign({ id: admin._id, email: admin.email }, process.env.JWT_SECRET, {
                 expiresIn: parseInt(process.env.JWT_EXPIRED)
             });
             
 			res.json({
                 message: 'Login successfully',
-                data: employee,
+                data: admin,
                 token: token
             });
 		})
