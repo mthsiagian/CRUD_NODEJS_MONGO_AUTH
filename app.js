@@ -22,10 +22,10 @@ app.get('/',(req,res) => {
 })
 
 //middleware function to log requested API
-app.use((req,res,next)=>{   
-    console.log(`${new Date().toString()} -- ${req.originalUrl}`);
-    next(); //End with next or a response!
-});
+// app.use((req,res,next)=>{   
+//     console.log(`${new Date().toString()} -- ${req.originalUrl}`);
+//     next(); //End with next or a response!
+// });
 
 // API Routing
 app.use('/api',routes);

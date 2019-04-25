@@ -25,10 +25,9 @@ exports.show = function (req, res) {
         });
     }
     
-    // get data from redis
-    access.getByIDCached(req.params.id, function (code, err, employee) {
+    // Get ID data from redis
+    access.getRedisId(req.params.id, function (code, err, employee) {
         if (err) {
-            console.log("kena disni")
             return res.status(code).json({
                 message: err
             });
@@ -46,7 +45,6 @@ exports.update = function (req, res) {
     
     // update data employee on redis
     access.updateById(req.params.id, data, function (code, err, employee) {
-        console.log(data)
         if (err) {
             return res.status(code).json({
                 message: err
@@ -62,7 +60,7 @@ exports.update = function (req, res) {
 
 // Handle delete employee
 exports.delete = function (req, res) {
-    // delete data employee from redis
+    // Delete by ID redis
     access.deleteByIDCached(req.params.id, function (code, err, employee) {
         if (err) {
             return res.status(code).json({
