@@ -2,6 +2,7 @@ let employeeModel = require('../models/employeeModel')
 let validator = require('validator')
 var employeeController = {}
 
+
 employeeController.newEmployee = (req,res) =>{
     let employee = new employeeModel(req.body);
     if(!employee){
@@ -25,8 +26,18 @@ employeeController.newEmployee = (req,res) =>{
     })
 }
 
-employeeController.find = (req,res) =>{
-    employeeModel.findOne({email:req.params.email})
+employeeController.findAll = (req,res) =>{
+    employeeModel.find()
+        .then(doc => {
+            res.status(200).json(doc)
+        })
+        .catch(err => {
+            res.status(500).json(err)
+        })
+}
+
+employeeController.findEmployee = (req,res) =>{
+    employeeModel.findOne({_id:req.params.id})
         .then(doc => {
             res.json(doc)
         })
@@ -36,7 +47,13 @@ employeeController.find = (req,res) =>{
 }
 
 employeeController.update = (req,res)=>{
-    employeeModel.findOneAndUpdate({email:req.body.email}, data, {new: true})
+    let employee = req.body || {};
+    if (employee.email && !validator.isEmail(employee.email)){
+        return res.status(400).json({
+            msg:"Invalid Email address"
+        })
+    }
+    employeeModel.findOneAndUpdate({_id:req.params.id}, employee, {new: true})
         .then(doc => {
             if(!doc){
                 res.status(400).json({
@@ -49,6 +66,18 @@ employeeController.update = (req,res)=>{
             })
         })
         .catch(err =>{
+            res.status(500).json(err)
+        })
+}
+
+employeeController.delete = (req,res) => {
+    employeeModel.findOneAndDelete({_id:req.params.id})
+        .then(doc => {
+            res.status(200).json({
+                msg : "Data has been deleted"
+            })
+        })
+        .catch(err => {
             res.status(500).json(err)
         })
 }

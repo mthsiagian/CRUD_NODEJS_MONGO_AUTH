@@ -1,10 +1,10 @@
 require('dotenv').config();
-let adminModel = require('../models/adminModel');
-
 let validator = require('validator');
 
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
+
+let adminModel = require('../models/adminModel');
 
 exports.register = function(req,res){
     data = Object.assign(req.body) || {};
@@ -45,7 +45,7 @@ exports.login = function (req, res) {
                     message: "Email or Password is not valid"
                 });
             }
-
+            //Validate encrypted password
             var IsValidPassword = bcrypt.compareSync(data.password, admin.password);
             if (!IsValidPassword) {
                 return res.status(401).json({
