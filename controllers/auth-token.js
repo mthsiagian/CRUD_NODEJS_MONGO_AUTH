@@ -2,7 +2,7 @@ require('dotenv').config();
 let jwt = require('jsonwebtoken')
 
 let validToken = function(req,res,next){
-    let token = req.headers['x-access-token'];
+    let token = req.headers['x-access-token']||req.headers['authorization'];
     if(!token){
         return res.status(401).json({
             msg:"Token is not found"
